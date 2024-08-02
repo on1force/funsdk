@@ -79,7 +79,7 @@ const buyInstruct = await fun.compileBuyInstruction({
     trader: creator.publicKey,
     token: token.publicKey,
     solAmount: buyAmount
-});
+}, true); // set to true if this is the initial token buy, else empty
 ```
 
 ### Get token sell instruction
@@ -134,6 +134,8 @@ Use to compile a buy token instruction for pumpfun program
   - solAmount [bigint] - Buy value in sol amount
   - trader [PublicKey] - The assign trader public key
   - token [PublicKey] - The assign token public key
+- isInitial [boolean] - is initial token buy
+  - default false
 
 ``.compileSellInstruction``
 Use to compile a sell token instruction for pumpfun program

@@ -37,16 +37,15 @@ describe('Fun test unit', async () => {
         expect(createIntruct.data).toBeInstanceOf(Buffer);
     });
 
-    test("Generate buy token instruction [Fail on no bonding curve]", async () => {
-        expect(
-            Promise.resolve(
-                fun.compileBuyInstruction({
-                    solAmount: BigInt(1 * LAMPORTS_PER_SOL),
-                    token: token.publicKey,
-                    trader: creator.publicKey
-                })
-            )
-        ).rejects.toThrowError("Bonding curve not found")
+    test("Generate buy token instruction", async () => {
+        const buyInstruct = await fun.compileBuyInstruction({
+            solAmount: BigInt(1 * LAMPORTS_PER_SOL),
+            token: token.publicKey,
+            trader: creator.publicKey
+        }, true);
+
+        expect(buyInstruct).toBeInstanceOf(TransactionInstruction);
+        expect(buyInstruct.data).toBeInstanceOf(Buffer);
     });
 
     test("Generate sell token instruction [Fail on no bonding curve]", async () => {

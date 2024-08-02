@@ -91,11 +91,6 @@ class Fun {
         return metadataPDA;
     }
 
-    private async getPumpfunFeeRecipient() {
-        const globalAcc = await this.getPumpfunGlobal();
-        return globalAcc.feeRecipient;
-    }
-
     private async getPumpfunGlobal() {
         const [globalAccPDA] = PublicKey.findProgramAddressSync(
             [Buffer.from(GLOBAL_ACCOUNT_SEED)],
@@ -166,13 +161,13 @@ class Fun {
     private async compileTradeInstruction(params: TradeInstructionParam, method: "BUY" | "SELL"): Promise<TransactionInstruction> {
         const ABC = await this.getABC(params.token);
         const buyerTokenAcc = await getAssociatedTokenAddress(params.token, params.trader, false);
-        const globalFeeRecipient = await this.getPumpfunFeeRecipient();
+        const globalAcc = await this.getPumpfunGlobal();
 
-        if (method === "BUY") {
+        if (method === "BUY" && ABC) {
             return await this.program.methods
                 .buy(new BN(params.amount), new BN(params.slippageCut))
                 .accounts({
-                    feeRecipient: globalFeeRecipient,
+                    feeRecipient: globalAcc.feeRecipient,
                     mint: params.token,
                     associatedBondingCurve: ABC,
                     associatedUser: buyerTokenAcc,
@@ -183,7 +178,7 @@ class Fun {
             return await this.program.methods
                 .sell(new BN(params.amount), new BN(params.slippageCut))
                 .accounts({
-                    feeRecipient: globalFeeRecipient,
+                    feeRecipient: globalAcc.feeRecipient,
                     mint: params.token,
                     associatedBondingCurve: ABC,
                     associatedUser: buyerTokenAcc,
@@ -266,6 +261,9 @@ class Fun {
      * @prop { PublicKey } params.token - Token public key
      * @prop { bigint } params.solAmount - Token buy amount (in SOL)
      * 
+     * @param { boolean } isInitial - is initial buy transaction for token
+     * @default false
+     * 
      * @returns {Promise<TransactionInstruction>} Returns a Promise\<TransactionInstruction\> instance
      * 
      * @example
@@ -281,17 +279,30 @@ class Fun {
      *      solAmount: bigint(buyAmount)
      * });
      */
-    public async compileBuyInstruction(params: BuyInstructionParam): Promise<TransactionInstruction> {
-        const bondingCurve = await this.getBondingCurveAccount(params.token);
-        const tokenPrice = bondingCurve.getBuyPrice(params.solAmount);
-        const slippageCut = calculateSlippageBuy(params.solAmount, this.slippageBasis);
+    public async compileBuyInstruction(params: BuyInstructionParam, isInitial: boolean = false): Promise<TransactionInstruction> {
+        if (isInitial) {
+            const globalAcc = await this.getPumpfunGlobal();
+            const tokenPrice = globalAcc.getInitialBuyPrice(params.solAmount);
+            const slippageCut = calculateSlippageBuy(params.solAmount, this.slippageBasis);
 
-        return await this.compileTradeInstruction({
-            token: params.token,
-            trader: params.trader,
-            amount: tokenPrice,
-            slippageCut
-        }, "BUY");
+            return await this.compileTradeInstruction({
+                token: params.token,
+                trader: params.trader,
+                amount: tokenPrice,
+                slippageCut
+            }, "BUY");
+        } else {
+            const bondingCurve = await this.getBondingCurveAccount(params.token);
+            const tokenPrice = bondingCurve.getBuyPrice(params.solAmount);
+            const slippageCut = calculateSlippageBuy(params.solAmount, this.slippageBasis);
+
+            return await this.compileTradeInstruction({
+                token: params.token,
+                trader: params.trader,
+                amount: tokenPrice,
+                slippageCut
+            }, "BUY");
+        }
     }
 
     /**
