@@ -15,6 +15,10 @@
     "name": "on1force",
     "url": "https://github.com/on1force"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/on1force/funsdk"
+  },
   "license": "MIT",
   "type": "module",
   "devDependencies": {
