@@ -13,7 +13,7 @@ npm i funsdk # any package manager should work
 ### Initiate
 
 ```ts
-import Fun from 'funsdk';
+import { Fun } from 'funsdk';
 import { Connection, clusterApiUrl } from '@solana/web3.js';
 
 const connection = new Connection(clusterApiUrl("mainnet-beta"));
