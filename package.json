@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "publishConfig": {
     "access": "public",
-    "tag": "solana, crypto, pumpfun, sdk"
+    "tag": "latest"
   },
   "description": "A strong-typed pumpfun SDK",
   "module": "index.ts",
