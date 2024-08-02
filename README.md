@@ -1,0 +1,206 @@
+# funsdk
+
+A package for interacting with [pumpfun](https://pump.fun) fully typed.
+
+## Instalation
+
+```bash
+npm i funsdk # any package manager should work
+```
+
+## How to use
+
+### Initiate
+
+```ts
+import Fun from 'funsdk';
+import { Connection, clusterApiUrl } from '@solana/web3.js';
+
+const connection = new Connection(clusterApiUrl("mainnet-beta"));
+const fun = new Fun(connection);
+```
+
+### Get Create Token Instruction
+
+```ts
+import { Fun, type TokenMeta } from 'funsdk';
+import fs from 'fs';
+import { Connection, clusterApiUrl, Keypair } from '@solana/web3.js';
+
+// ... previous init code
+
+const creator = Keypair.generate();
+const token = Keypair.generate();
+
+const imagePath = fs.readFileSync("./image.jpg", {encoding: "base64"});
+const image = new File([imagePath], "image.jpg");
+
+const tokenData: TokenMeta = {
+    name: "ABC",
+    symbol: "DEF",
+    description: "GHI",
+    image,
+    keypair: token
+    // socials if any...
+};
+
+/** 
+ * This will return a TransactionInstruction instance
+ * so you can freely assign the instruction to any type
+ * of transaction that you like.
+ * 
+ * ex. Transaction | VersionedTransaction
+ * **/
+const createInstruct = await fun.compileCreateTokenInstruction({
+    creator: creator.publicKey,
+    tokenData
+});
+```
+
+### Get token buy instruction
+
+```ts
+import { Fun } from 'funsdk';
+import fs from 'fs';
+import { Connection, clusterApiUrl, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
+
+// ... previous init code
+// ... previous create code
+
+const buyAmount = Bigint(1 * LAMPORTS_PER_SOL);
+
+/** 
+ * Same return value as before 
+ * 
+ * this will return Error if the token bonding curve account
+ * is not found
+ * **/
+const buyInstruct = await fun.compileBuyInstruction({
+    trader: creator.publicKey,
+    token: token.publicKey,
+    solAmount: buyAmount
+});
+```
+
+### Get token sell instruction
+
+```ts
+import { Fun } from 'funsdk';
+import fs from 'fs';
+import { Connection, clusterApiUrl, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
+
+// ... previous init code
+// ... previous create code
+
+// Preferably build a function that fetches your token balance
+// and do some calculations for the sell amount
+const sellAmount = 1000000n;
+
+/** 
+ * Same return value as before
+ * 
+ * this will return Error if the token bonding curve account
+ * is not found
+ *  **/
+const buyInstruct = await fun.compileSellInstruction({
+    trader: creator.publicKey,
+    token: token.publicKey,
+    tokenAmount: sellAmount
+});
+```
+
+## API
+
+``.compileCreateTokenInstruction``
+Use to compile a create token instruction for pumpfun program
+
+- async
+- Params [object]
+  - creator: [PublicKey]
+  - tokenMeta: [object]
+    - name: [string]
+    - symbol: [string]
+    - description: [string]
+    - image: [File]
+    - twitter?: [string]
+    - telegram?: [string]
+    - website?: [string]
+
+``.compileBuyInstruction``
+Use to compile a buy token instruction for pumpfun program
+
+- async
+- Params [object]
+  - solAmount [bigint] - Buy value in sol amount
+  - trader [PublicKey] - The assign trader public key
+  - token [PublicKey] - The assign token public key
+
+``.compileSellInstruction``
+Use to compile a sell token instruction for pumpfun program
+
+- async
+- Params [object]
+  - tokenAmount [bigint] - Sell value in token amount
+  - trader [PublicKey] - The assign trader public key
+  - token [PublicKey] - The assign token public key
+
+## Types
+
+```ts
+interface TokenMetadataResponse {
+    metadata: {
+        name: string
+        symbol: string
+        description: string
+        image: string
+        showName: boolean
+        createdOn: string
+    }
+    metadataUri: string
+}
+
+interface TokenMeta {
+    keypair: Keypair;
+    name: string;
+    symbol: string;
+    image: File;
+    description: string;
+    telegram?: string;
+    twitter?: string;
+    website?: string;
+}
+
+interface CreateTokenInstructionParam {
+    creator: PublicKey;
+    tokenMeta: TokenMeta;
+}
+
+interface TradeInstructionParam {
+    trader: PublicKey;
+    token: PublicKey;
+    amount: bigint;
+    slippageCut: bigint;
+}
+
+interface BuyInstructionParam {
+    trader: PublicKey;
+    token: PublicKey;
+    solAmount: bigint;
+}
+
+interface SellInstructionParam {
+    trader: PublicKey;
+    token: PublicKey;
+    tokenAmount: bigint;
+};
+```
+
+## Author
+
+[on1force](https://github.com/on1force)
+
+## License
+
+MIT
+
+> This project was created using `bun init` in bun v1.1.20. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

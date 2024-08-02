@@ -1,0 +1,34 @@
+{
+  "name": "funsdk",
+  "version": "0.0.1 --alpha",
+  "description": "A strong-typed pumpfun SDK",
+  "module": "index.ts",
+  "main": "index.ts",
+  "files": ["./constant", "./IDL", "./pumpfun", "./utils"],
+  "keywords": [
+    "pumpfun",
+    "sdk",
+    "solana",
+    "pumpfun sdk"
+  ],
+  "author": {
+    "name": "on1force",
+    "url": "https://github.com/on1force"
+  },
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "fs": "^0.0.1-security"
+  },
+  "peerDependencies": {
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.30.1",
+    "@coral-xyz/borsh": "^0.30.1",
+    "@solana/spl-token": "^0.4.8",
+    "@solana/web3.js": "^1.95.2",
+    "bs58": "^6.0.0"
+  }
+}
