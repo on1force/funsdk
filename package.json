@@ -1,6 +1,10 @@
 {
   "name": "funsdk",
   "version": "0.0.1 --alpha",
+  "publishConfig": {
+    "access": "public",
+    "tag": "solana, crypto, pumpfun, sdk"
+  },
   "description": "A strong-typed pumpfun SDK",
   "module": "index.ts",
   "main": "index.ts",
