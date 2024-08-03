@@ -80,6 +80,16 @@ const buyInstruct = await fun.compileBuyInstruction({
     token: token.publicKey,
     solAmount: buyAmount
 }, true); // set to true if this is the initial token buy, else empty
+
+// If true was passed, function will include createAssociatedTokenAccount along with
+// the buy instruction [createATA, buyInstruct]
+     
+// with type annotation. Same return as above
+// fun.compileBuyInstruction<true>({
+//     solAmount: BigInt(1 * LAMPORTS_PER_SOL),
+//     token: token.publicKey,
+//     trader: creator.publicKey
+// })
 ```
 
 ### Get token sell instruction
@@ -102,21 +112,11 @@ const sellAmount = 1000000n;
  * this will return Error if the token bonding curve account
  * is not found
  *  **/
-const buyInstruct = await fun.compileSellInstruction({
+const sellInstruct = await fun.compileSellInstruction({
     trader: creator.publicKey,
     token: token.publicKey,
     tokenAmount: sellAmount
 }, true);
-
-// If true was passed, function will include createAssociatedTokenAccount along with
-// the buy instruction [createATA, buyInstruct]
-     
-// with type annotation. Same return as above
-// fun.compileBuyInstruction<true>({
-//     solAmount: BigInt(1 * LAMPORTS_PER_SOL),
-//     token: token.publicKey,
-//     trader: creator.publicKey
-// })
 ```
 
 ## API
