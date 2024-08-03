@@ -1,4 +1,4 @@
-import type { Keypair, PublicKey } from "@solana/web3.js";
+import type { Keypair, PublicKey, TransactionInstruction } from "@solana/web3.js";
 
 export interface TokenMetadataResponse {
     metadata: {
@@ -46,3 +46,7 @@ export interface SellInstructionParam {
     token: PublicKey;
     tokenAmount: bigint;
 };
+
+export type CompileBuyReturn<B extends boolean> = B extends true
+    ? TransactionInstruction[]
+    : TransactionInstruction

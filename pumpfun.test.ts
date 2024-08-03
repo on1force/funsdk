@@ -44,8 +44,15 @@ describe('Fun test unit', async () => {
             trader: creator.publicKey
         }, true);
 
-        expect(buyInstruct).toBeInstanceOf(TransactionInstruction);
-        expect(buyInstruct.data).toBeInstanceOf(Buffer);
+        // with type annotation. Same return as above
+        // fun.compileBuyInstruction<true>({
+        //     solAmount: BigInt(1 * LAMPORTS_PER_SOL),
+        //     token: token.publicKey,
+        //     trader: creator.publicKey
+        // })
+
+        expect(buyInstruct).toBeInstanceOf(Array<TransactionInstruction>);
+        expect(buyInstruct[0].data).toBeInstanceOf(Buffer);
     });
 
     test("Generate sell token instruction [Fail on no bonding curve]", async () => {

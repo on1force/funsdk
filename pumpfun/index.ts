@@ -11,7 +11,8 @@ import {
     type SellInstructionParam,
     type TokenMeta,
     type TokenMetadataResponse,
-    type TradeInstructionParam
+    type TradeInstructionParam,
+    type CompileBuyReturn,
 } from "../constant";
 import {
     GlobalAccount,
@@ -22,7 +23,7 @@ import {
 import { BN, Program, type Provider } from "@coral-xyz/anchor";
 import { IDL, type PumpFun } from "../IDL";
 import { PublicKey, TransactionInstruction, type Connection } from "@solana/web3.js";
-import { getAssociatedTokenAddress } from "@solana/spl-token";
+import { createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 
 
 class Fun {
@@ -89,6 +90,23 @@ class Fun {
         );
 
         return metadataPDA;
+    }
+
+    private async createATAInstruct(owner: PublicKey, token: PublicKey) {
+        const atad = await getAssociatedTokenAddress(
+            token,
+            owner,
+            false
+        );
+
+        const createAta = createAssociatedTokenAccountInstruction(
+            owner,
+            atad,
+            owner,
+            token
+        );
+
+        return createAta;
     }
 
     private async getPumpfunGlobal() {
@@ -163,7 +181,7 @@ class Fun {
         const buyerTokenAcc = await getAssociatedTokenAddress(params.token, params.trader, false);
         const globalAcc = await this.getPumpfunGlobal();
 
-        if (method === "BUY" && ABC) {
+        if (method === "BUY") {
             return await this.program.methods
                 .buy(new BN(params.amount), new BN(params.slippageCut))
                 .accounts({
@@ -254,17 +272,17 @@ class Fun {
 
     /**
      * @async
-     * @function compileBuyInstruction
+     * @function compileBuyInstruction<B>
      * 
      * @param {BuyInstructionParam} params - Buy instruction parameter object
-     * @prop { PublicKey } params.trader - Trader public key
-     * @prop { PublicKey } params.token - Token public key
-     * @prop { bigint } params.solAmount - Token buy amount (in SOL)
+     *  - params.trader { PublicKey } - Trader public key
+     *  - params.token { PublicKey } - Token public key
+     *  - params.solAmount { bigint } - Token buy amount (in SOL)
      * 
      * @param { boolean } isInitial - is initial buy transaction for token
      * @default false
      * 
-     * @returns {Promise<TransactionInstruction>} Returns a Promise\<TransactionInstruction\> instance
+     * @returns {Promise<CompileBuyReturn<T>>} Returns a Promise\<TransactionInstruction[] | TransactionInstruction\> instance
      * 
      * @example
      * // ...initialization codes
@@ -277,20 +295,33 @@ class Fun {
      *      trader,
      *      token,
      *      solAmount: bigint(buyAmount)
-     * });
+     * }, true);
+     * 
+     * // If true was passed, function will include createAssociatedTokenAccount along with
+     * // the buy instruction [createATA, buyInstruct]
+     * 
+     *  // with type annotation. Same return as above
+        // fun.compileBuyInstruction<true>({
+        //     solAmount: BigInt(1 * LAMPORTS_PER_SOL),
+        //     token: token.publicKey,
+        //     trader: creator.publicKey
+        // })
      */
-    public async compileBuyInstruction(params: BuyInstructionParam, isInitial: boolean = false): Promise<TransactionInstruction> {
+    public async compileBuyInstruction<B extends boolean = false>(params: BuyInstructionParam, isInitial: B): Promise<CompileBuyReturn<B>> {
         if (isInitial) {
             const globalAcc = await this.getPumpfunGlobal();
             const tokenPrice = globalAcc.getInitialBuyPrice(params.solAmount);
             const slippageCut = calculateSlippageBuy(params.solAmount, this.slippageBasis);
 
-            return await this.compileTradeInstruction({
+            const ataInstruct = await this.createATAInstruct(params.trader, params.token);
+            const buyInstruct = await this.compileTradeInstruction({
                 token: params.token,
                 trader: params.trader,
                 amount: tokenPrice,
                 slippageCut
             }, "BUY");
+
+            return [ataInstruct, buyInstruct] as CompileBuyReturn<B>;
         } else {
             const bondingCurve = await this.getBondingCurveAccount(params.token);
             const tokenPrice = bondingCurve.getBuyPrice(params.solAmount);
@@ -301,7 +332,7 @@ class Fun {
                 trader: params.trader,
                 amount: tokenPrice,
                 slippageCut
-            }, "BUY");
+            }, "BUY") as CompileBuyReturn<B>;
         }
     }
 
