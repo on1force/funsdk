@@ -2,6 +2,11 @@
 
 A package for interacting with [pumpfun](https://pump.fun) fully typed.
 
+> [!CAUTION]
+> **THIS PACKAGE IS NOT PRODUCTION READY**
+> 
+> expect breaking changes in the future
+
 ## Instalation
 
 ```bash
@@ -19,6 +24,12 @@ import { Connection, clusterApiUrl } from '@solana/web3.js';
 const connection = new Connection(clusterApiUrl("mainnet-beta"));
 const fun = new Fun(connection);
 ```
+
+> [!WARNING]
+> **RENT EXEMPTION CHECK IS INCLUDED IN THIS FUNCTION**
+> 
+> Please ensure that the creator account has enough SOL for rent exemption
+> before executing any transaction.
 
 ### Get Create Token Instruction
 
@@ -45,6 +56,8 @@ const tokenData: TokenMeta = {
 };
 
 /** 
+ * If insufficient SOL is provided, the function will throw an error
+ * 
  * This will return a TransactionInstruction instance
  * so you can freely assign the instruction to any type
  * of transaction that you like.
@@ -56,6 +69,12 @@ const createInstruct = await fun.compileCreateTokenInstruction({
     tokenData
 });
 ```
+
+> [!WARNING]
+> **RENT EXEMPTION CHECK IS INCLUDED IN THIS FUNCTION**
+> 
+> Please ensure that the creator account has enough SOL for rent exemption
+> before executing any transaction.
 
 ### Get token buy instruction
 
@@ -70,10 +89,10 @@ import { Connection, clusterApiUrl, Keypair, LAMPORTS_PER_SOL } from '@solana/we
 const buyAmount = Bigint(1 * LAMPORTS_PER_SOL);
 
 /** 
- * Same return value as before 
+ * If insufficient SOL is provided, the function will throw an error
+ * If the token bonding curve account is not found, the function will throw an error
  * 
- * this will return Error if the token bonding curve account
- * is not found
+ * Same return value as before 
  * **/
 const buyInstruct = await fun.compileBuyInstruction({
     trader: creator.publicKey,

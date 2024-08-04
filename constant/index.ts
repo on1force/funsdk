@@ -7,7 +7,7 @@ const MINT_AUTHORITY_SEED = "mint-authority";
 const BONDING_CURVE_SEED = "bonding-curve";
 const METADATA_SEED = "metadata";
 const DEFAULT_DECIMALS = 6;
-const DEFAULT_COMMITMENT: Commitment = "confirmed";
+const DEFAULT_COMMITMENT: Commitment = "finalized";
 const DEFAULT_SLIPPAGE_BASIS = 500n;
 
 export {

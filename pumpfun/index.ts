@@ -23,7 +23,7 @@ import {
 import { BN, Program, type Provider } from "@coral-xyz/anchor";
 import { IDL, type PumpFun } from "../IDL";
 import { PublicKey, TransactionInstruction, type Connection } from "@solana/web3.js";
-import { createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
+import { AccountLayout, createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 
 
 class Fun {
@@ -90,6 +90,17 @@ class Fun {
         );
 
         return metadataPDA;
+    }
+
+    private async checkRentExempt(trader: PublicKey) {
+        const rentExemptBalance = await this.connection.getMinimumBalanceForRentExemption(AccountLayout.span);
+        const traderBalance = await this.connection.getBalance(trader);
+
+        if (traderBalance < rentExemptBalance) {
+            throw new Error(`${trader.toBase58()} account has insufficient funds for rent exemption. Required: ${rentExemptBalance}, Available: ${traderBalance}`);
+        }
+
+        return true;
     }
 
     private async createATAInstruct(owner: PublicKey, token: PublicKey) {
@@ -247,6 +258,8 @@ class Fun {
      * });
      */
     public async compileCreateTokenInstruction(params: CreateTokenInstructionParam): Promise<TransactionInstruction> {
+        await this.checkRentExempt(params.creator);
+
         const token = params.tokenMeta.keypair;
         const metadataUri = await this.createTokenMetadata(params.tokenMeta);
 
@@ -308,6 +321,8 @@ class Fun {
         // })
      */
     public async compileBuyInstruction<B extends boolean = false>(params: BuyInstructionParam, isInitial: B): Promise<CompileBuyReturn<B>> {
+        await this.checkRentExempt(params.trader);
+
         if (isInitial) {
             const globalAcc = await this.getPumpfunGlobal();
             const tokenPrice = globalAcc.getInitialBuyPrice(params.solAmount);
