@@ -4,7 +4,7 @@ A package for interacting with [pumpfun](https://pump.fun) fully typed.
 
 > [!CAUTION]
 > **THIS PACKAGE IS NOT PRODUCTION READY**\
-> expect breaking changes in the future\
+> expect breaking changes in the future
 
 ## Instalation
 
@@ -25,7 +25,7 @@ const fun = new Fun(connection);
 ```
 
 > [!WARNING]
-> **RENT EXEMPTION CHECK IS INCLUDED IN THIS FUNCTION**
+> **RENT EXEMPTION CHECK IS INCLUDED IN THIS FUNCTION**\
 > Please ensure that the creator account has enough SOL for rent exemption
 > before executing any transaction.
 
@@ -69,8 +69,7 @@ const createInstruct = await fun.compileCreateTokenInstruction({
 ```
 
 > [!WARNING]
-> **RENT EXEMPTION CHECK IS INCLUDED IN THIS FUNCTION**
-> 
+> **RENT EXEMPTION CHECK IS INCLUDED IN THIS FUNCTION**\
 > Please ensure that the creator account has enough SOL for rent exemption
 > before executing any transaction.
 
