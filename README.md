@@ -153,6 +153,15 @@ console.log(tokenData);
 // name, symbol, description, image_uri, metadata_uri, etc.
 ```
 
+### Get bonding curve data
+
+```ts
+const bondingCurveData = await fun.getBondingCurveData(token.publicKey);
+
+console.log(bondingCurveData);
+// virtualTokenReserves, virtualSolReserves, realTokenReserves, realSolReserves, tokenTotalSupply, complete
+```
+
 ### Listen to events
 
 ```ts
@@ -209,6 +218,13 @@ Use to get token data from pumpfun API
 
 - async
 - Params [PublicKey] - The assign token public key
+
+``.getBondingCurveData``
+Use to get bonding curve data from pumpfun program
+useful for calculating token price, mcap, etc.
+
+- async
+- Params [PublicKey] - The assign bonding curve public key
 
 ``.listen``
 Use to listen to pumpfun events

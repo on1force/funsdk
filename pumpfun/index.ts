@@ -220,17 +220,6 @@ class Fun {
         }
     }
 
-    public async getTokenDataAPI(token: PublicKey) {
-        const url = "https://frontend-api.pump.fun/coins";
-        const res = await fetch(`${url}/${token.toBase58()}`);
-
-        if (!res.ok) {
-            throw new Error(res.statusText);
-        }
-
-        return await res.json() as TokenDataAPI;
-    }
-
     /**
      * @function listen
      * 
@@ -258,6 +247,61 @@ class Fun {
         }
 
         return removeListener;
+    }
+
+    /**
+     * @async
+     * @function getTokenDataAPI
+     * 
+     * @param { PublicKey } token - The assign token public key
+     * @returns {Promise<TokenDataAPI>} Returns a Promise\<TokenDataAPI\> instance
+     * 
+     * @example
+     * // ...initialization codes
+     * 
+     * const token = new PublicKey("token address");
+     * const tokenData = await fun.getTokenDataAPI(token);
+     * 
+     * console.log(tokenData);
+     * // name, symbol, description, image_uri, metadata_uri, etc.
+     */
+    public async getTokenDataAPI(token: PublicKey) {
+        const url = "https://frontend-api.pump.fun/coins";
+        const res = await fetch(`${url}/${token.toBase58()}`);
+
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+
+        return await res.json() as TokenDataAPI;
+    }
+
+    /**
+     * @async
+     * @function getBondingCurveData
+     * 
+     * @param { PublicKey } bongingCurve - The assign bonding curve public key
+     * @returns {Promise<{
+     *      virtualTokenReserves: BN;
+     *      virtualSolReserves: BN;
+     *      realTokenReserves: BN;
+     *      realSolReserves: BN;
+     *      tokenTotalSupply: BN;
+     *      complete: boolean;
+     * }>} Returns a Promise\<BondingCurveData\> instance
+     * 
+     * @example
+     * // ...initialization codes
+     * 
+     * const bondingCurve = new PublicKey("bonding curve address");
+     * const bondingCurveData = await fun.getBondingCurveData(bondingCurve);
+     * 
+     * console.log(bondingCurveData);
+     * // virtualTokenReserves, virtualSolReserves, realTokenReserves, realSolReserves, tokenTotalSupply, complete
+     */
+    public async getBondingCurveData(bongingCurve: PublicKey) {
+        const data = await this.program.account.bondingCurve.fetch(bongingCurve);
+        return data;
     }
 
     /**
