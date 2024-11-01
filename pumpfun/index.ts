@@ -14,7 +14,8 @@ import {
     type TokenMetadataResponse,
     type TradeInstructionParam,
     type CompileBuyReturn,
-    type EventCallback
+    type EventCallback,
+    type TokenDataAPI
 } from "../constant";
 import {
     GlobalAccount,
@@ -70,7 +71,7 @@ class Fun {
             connection: connection as any as Provider["connection"],
             publicKey: user
         }
-        this.program = new Program<PumpFun>(IDL, provider);
+        this.program = new Program(IDL, provider);
         this.connection = connection;
     }
 
@@ -219,6 +220,17 @@ class Fun {
         }
     }
 
+    public async getTokenDataAPI(token: PublicKey) {
+        const url = "https://frontend-api.pump.fun/coins";
+        const res = await fetch(`${url}/${token.toBase58()}`);
+
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+
+        return await res.json() as TokenDataAPI;
+    }
+
     /**
      * @function listen
      * 
@@ -237,11 +249,9 @@ class Fun {
      * 
      * await removeListener();
      */
-    public listen(event: Events, callback: (event: EventCallback<Events>) => void) {
+    public listen(event: Events, callback: EventCallback<Events>) {
         const program = this.program;
-        const listener = program.addEventListener(event, (_event) => {
-            callback(_event as any as EventCallback<Events>);
-        });
+        const listener = program.addEventListener(event, callback as any);
 
         const removeListener = async () => {
             await program.removeEventListener(listener);

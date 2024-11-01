@@ -12,6 +12,7 @@ A package for interacting with [pumpfun](https://pump.fun) fully typed.
     > - Updated to use borsh v0.30.1
     > - Updated to use spl-token v0.4.9
     > - Added event listener function
+    > - Added getTokenDataAPI function
     > - Expect breaking changes in the future
 
 ## Instalation
@@ -143,6 +144,15 @@ const sellInstruct = await fun.compileSellInstruction({
 }, true);
 ```
 
+### Get token data
+
+```ts
+const tokenData = await fun.getTokenDataAPI(token.publicKey);
+
+console.log(tokenData);
+// name, symbol, description, image_uri, metadata_uri, etc.
+```
+
 ### Listen to events
 
 ```ts
@@ -193,6 +203,12 @@ Use to compile a sell token instruction for pumpfun program
   - tokenAmount [bigint] - Sell value in token amount
   - trader [PublicKey] - The assign trader public key
   - token [PublicKey] - The assign token public key
+
+``.getTokenDataAPI``
+Use to get token data from pumpfun API
+
+- async
+- Params [PublicKey] - The assign token public key
 
 ``.listen``
 Use to listen to pumpfun events
