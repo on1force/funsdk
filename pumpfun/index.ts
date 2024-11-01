@@ -6,6 +6,7 @@ import {
     METADATA_SEED,
     MPL_TOKEN_METADATA_PROGRAM_ID,
     PUMPFUN_PROGRAM_ID,
+    type Events,
     type BuyInstructionParam,
     type CreateTokenInstructionParam,
     type SellInstructionParam,
@@ -13,6 +14,7 @@ import {
     type TokenMetadataResponse,
     type TradeInstructionParam,
     type CompileBuyReturn,
+    type EventCallback
 } from "../constant";
 import {
     GlobalAccount,
@@ -65,7 +67,7 @@ class Fun {
      */
     constructor(connection: Connection, user?: PublicKey) {
         const provider: Provider = {
-            connection,
+            connection: connection as any as Provider["connection"],
             publicKey: user
         }
         this.program = new Program<PumpFun>(IDL, provider);
@@ -215,6 +217,37 @@ class Fun {
                 })
                 .instruction()
         }
+    }
+
+    /**
+     * @function listen
+     * 
+     * @param {Events} event - Event type
+     * @param {EventCallback<Events>} callback - Event callback
+     * @returns {() => Promise<void>} Returns the remove listener function
+     * 
+     * @example
+     * // ...initialization codes
+     * 
+     * const removeListener = fun.listen("createEvent", (event) => {
+     *      console.log(event);
+     * });
+     * 
+     * // ...some codes
+     * 
+     * await removeListener();
+     */
+    public listen(event: Events, callback: (event: EventCallback<Events>) => void) {
+        const program = this.program;
+        const listener = program.addEventListener(event, (_event) => {
+            callback(_event as any as EventCallback<Events>);
+        });
+
+        const removeListener = async () => {
+            await program.removeEventListener(listener);
+        }
+
+        return removeListener;
     }
 
     /**

@@ -3,9 +3,8 @@
 A package for interacting with [pumpfun](https://pump.fun) fully typed.
 
 > [!CAUTION]
-> **THIS PACKAGE IS NOT PRODUCTION READY**
-> 
-> expect breaking changes in the future
+> **THIS PACKAGE IS NOT PRODUCTION READY**\
+> expect breaking changes in the future\
 
 ## Instalation
 
@@ -27,7 +26,6 @@ const fun = new Fun(connection);
 
 > [!WARNING]
 > **RENT EXEMPTION CHECK IS INCLUDED IN THIS FUNCTION**
-> 
 > Please ensure that the creator account has enough SOL for rent exemption
 > before executing any transaction.
 
@@ -138,6 +136,20 @@ const sellInstruct = await fun.compileSellInstruction({
 }, true);
 ```
 
+### Listen to events
+
+```ts
+// ... previous init code
+
+const removeListener = fun.listen("createEvent", (event) => {
+    console.log(event);
+});
+
+// ... some codes
+
+await removeListener();
+```
+
 ## API
 
 ``.compileCreateTokenInstruction``
@@ -175,9 +187,67 @@ Use to compile a sell token instruction for pumpfun program
   - trader [PublicKey] - The assign trader public key
   - token [PublicKey] - The assign token public key
 
+``.listen``
+Use to listen to pumpfun events
+
+- Params [object]
+  - event [Events] - Event type
+    - createEvent
+    - tradeEvent
+    - completeEvent
+    - setParamsEvent
+  - callback [function] - Event callback
+
 ## Types
 
 ```ts
+interface CreateEvent {
+    name: string;
+    symbol: string;
+    uri: string;
+    mint: PublicKey;
+    bondingCurve: PublicKey;
+    user: PublicKey;
+}
+
+interface TradeEvent {
+    mint: PublicKey;
+    solAmount: BN;
+    tokenAmount: BN;
+    isBuy: boolean;
+    user: PublicKey;
+    timestamp: BN;
+    virtualSolReserves: BN;
+    virtualTokenReserves: BN;
+    realSolReserves: BN;
+    realTokenReserves: BN;
+}
+
+interface CompleteEvent {
+    user: PublicKey;
+    mint: PublicKey;
+    bondingCurve: PublicKey;
+    timestamp: BN;
+}
+
+interface SetParamsEvent {
+    feeRecipient: PublicKey;
+    initialVirtualTokenReserves: BN;
+    initialVirtualSolReserves: BN;
+    initialRealTokenReserves: BN;
+    tokenTotalSupply: BN;
+    feeBasisPoints: BN;
+}
+
+type Events = "createEvent" | "tradeEvent" | "completeEvent" | "setParamsEvent";
+
+interface EventCallback<E extends Events> {
+    (event: E extends "createEvent" ? CreateEvent : never): void;
+    (event: E extends "tradeEvent" ? TradeEvent : never): void;
+    (event: E extends "completeEvent" ? CompleteEvent : never): void;
+    (event: E extends "setParamsEvent" ? SetParamsEvent : never): void;
+}
+
 interface TokenMetadataResponse {
     metadata: {
         name: string
@@ -233,5 +303,3 @@ interface SellInstructionParam {
 ## License
 
 MIT
-
-> This project was created using `bun init` in bun v1.1.20. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
