@@ -238,7 +238,7 @@ class Fun {
      * 
      * await removeListener();
      */
-    public listen(event: Events, callback: EventCallback<Events>) {
+    public listen<E extends Events>(event: E, callback: EventCallback<E>) {
         const program = this.program;
         const listener = program.addEventListener(event, callback as any);
 
