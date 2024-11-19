@@ -13,7 +13,8 @@
     "./constant",
     "./IDL",
     "./pumpfun",
-    "./utils"
+    "./utils",
+    "./dist"
   ],
   "keywords": [
     "pumpfun",
