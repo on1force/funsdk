@@ -1,2 +1,4 @@
-export { default as Fun } from './pumpfun';
+import Fun from './pumpfun';
+
 export * from './constant/types';
+export { Fun };
