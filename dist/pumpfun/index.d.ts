@@ -1,4 +1,5 @@
-import { type Events, type BuyInstructionParam, type CreateTokenInstructionParam, type SellInstructionParam, type CompileBuyReturn, type EventCallback, type TokenDataAPI } from "../constant";
+import { type Events, type BuyInstructionParam, type CreateTokenInstructionParam, type SellInstructionParam, type CompileBuyReturn, type EventCallback, type TokenDataAPI } from "../constant/index";
+import { BN } from "@coral-xyz/anchor";
 import { PublicKey, TransactionInstruction, type Connection } from "@solana/web3.js";
 declare class Fun {
     private program;
@@ -222,3 +223,4 @@ declare class Fun {
     compileSellInstruction(params: SellInstructionParam): Promise<TransactionInstruction>;
 }
 export default Fun;
+//# sourceMappingURL=index.d.ts.map

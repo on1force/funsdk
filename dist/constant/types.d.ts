@@ -116,3 +116,4 @@ export interface SellInstructionParam {
     tokenAmount: bigint;
 }
 export type CompileBuyReturn<B extends boolean> = B extends true ? TransactionInstruction[] : TransactionInstruction;
+//# sourceMappingURL=types.d.ts.map

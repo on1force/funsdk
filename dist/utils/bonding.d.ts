@@ -14,3 +14,4 @@ export declare class BondingCurveAccount {
     getBuyOutPrice(amount: bigint, feeBasisPoints: bigint): bigint;
     static fromBuffer(buffer: Buffer): BondingCurveAccount;
 }
+//# sourceMappingURL=bonding.d.ts.map
