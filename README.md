@@ -6,15 +6,6 @@ A package for interacting with [pumpfun](https://pump.fun) fully typed.
 > **THIS PACKAGE IS NOT PRODUCTION READY**\
 > expect breaking changes in the future
 
-> [!NOTE]
-> **RECENT UPDATE**
-    > - Updated to use anchor v0.30.1
-    > - Updated to use borsh v0.30.1
-    > - Updated to use spl-token v0.4.9
-    > - Added event listener function
-    > - Added getTokenDataAPI function
-    > - Expect breaking changes in the future
-
 ## Instalation
 
 ```bash

@@ -1,7 +1,7 @@
 import Fun from './pumpfun';
 import fs from 'fs';
 import { clusterApiUrl, Connection, Keypair, LAMPORTS_PER_SOL, TransactionInstruction } from '@solana/web3.js';
-import { test, expect, describe } from 'bun:test';
+import { describe, test, expect } from '@jest/globals';
 import type { TokenMeta } from './constant';
 
 const connection = new Connection(clusterApiUrl("mainnet-beta"));
