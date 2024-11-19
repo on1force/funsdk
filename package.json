@@ -1,6 +1,6 @@
 {
   "name": "funsdk",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publishConfig": {
     "access": "public",
     "tag": "latest"
@@ -13,13 +13,13 @@
   ],
   "exports": {
     ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "default": "./dist/pumpfun/index.js",
+      "types": "./dist/pumpfun/index.d.ts",
+      "import": "./dist/pumpfun/index.js"
     },
     "./types": {
-      "default": "./dist/index.d.ts",
-      "import": "./dist/index.d.ts"
+      "default": "./dist/constant/types.d.ts",
+      "import": "./dist/constant/types.d.ts"
     }
   },
   "keywords": [
