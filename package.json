@@ -1,6 +1,6 @@
 {
   "name": "funsdk",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "publishConfig": {
     "access": "public",
     "tag": "latest"
@@ -9,14 +9,11 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "./constant",
-    "./IDL",
-    "./pumpfun",
-    "./utils",
     "./dist"
   ],
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./types": "./dist/index.d.ts"
   },
   "keywords": [
     "pumpfun",
