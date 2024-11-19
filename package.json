@@ -9,6 +9,10 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
+    "./constant",
+    "./IDL",
+    "./pumpfun",
+    "./utils",
     "./dist"
   ],
   "keywords": [
