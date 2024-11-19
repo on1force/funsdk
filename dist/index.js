@@ -18,6 +18,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Fun = void 0;
-var pumpfun_1 = require("./pumpfun");
-Object.defineProperty(exports, "Fun", { enumerable: true, get: function () { return __importDefault(pumpfun_1).default; } });
+const pumpfun_1 = __importDefault(require("./pumpfun"));
+exports.Fun = pumpfun_1.default;
 __exportStar(require("./constant/types"), exports);
