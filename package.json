@@ -18,8 +18,8 @@
       "import": "./dist/pumpfun/index.js"
     },
     "./types": {
-      "default": "./dist/constant/types.d.ts",
-      "import": "./dist/constant/types.d.ts"
+      "default": "./dist/constant/index.d.ts",
+      "import": "./dist/constant/index.d.ts"
     }
   },
   "keywords": [
