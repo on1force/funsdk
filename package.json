@@ -1,6 +1,6 @@
 {
   "name": "funsdk",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "publishConfig": {
     "access": "public",
     "tag": "latest"
@@ -15,6 +15,9 @@
     "./utils",
     "./dist"
   ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "keywords": [
     "pumpfun",
     "sdk",
