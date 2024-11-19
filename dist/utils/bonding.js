@@ -3,13 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BondingCurveAccount = void 0;
 const borsh_1 = require("@coral-xyz/borsh");
 class BondingCurveAccount {
-    discriminator;
-    virtualTokenReserves;
-    virtualSolReserves;
-    realTokenReserves;
-    realSolReserves;
-    tokenTotalSupply;
-    complete;
     constructor(discriminator, virtualTokenReserves, virtualSolReserves, realTokenReserves, realSolReserves, tokenTotalSupply, complete) {
         this.discriminator = discriminator;
         this.virtualTokenReserves = virtualTokenReserves;

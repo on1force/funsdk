@@ -8,27 +8,6 @@ const IDL_1 = require("../IDL");
 const web3_js_1 = require("@solana/web3.js");
 const spl_token_1 = require("@solana/spl-token");
 class Fun {
-    program;
-    connection;
-    /**
-     * Default commitment for the class - can be override.
-     * @default "confirmed"
-     *
-     * @example
-     * // ...initialization codes
-     *
-     * fun.commitment = "finalized"
-     */
-    commitment = constant_1.DEFAULT_COMMITMENT;
-    /**
-     * Default slippage basis points for the class - can be override.
-     *
-     * @example
-     * // ...initialization codes
-     *
-     * fun.slippageBasis = 1000n; // or bigint(xyz)
-     */
-    slippageBasis = constant_1.DEFAULT_SLIPPAGE_BASIS;
     /**
      * @constructor
      * @param provider - Provider instance from anchor
@@ -42,6 +21,25 @@ class Fun {
      * const fun = new Fun(connection);
      */
     constructor(connection, user) {
+        /**
+         * Default commitment for the class - can be override.
+         * @default "confirmed"
+         *
+         * @example
+         * // ...initialization codes
+         *
+         * fun.commitment = "finalized"
+         */
+        this.commitment = constant_1.DEFAULT_COMMITMENT;
+        /**
+         * Default slippage basis points for the class - can be override.
+         *
+         * @example
+         * // ...initialization codes
+         *
+         * fun.slippageBasis = 1000n; // or bigint(xyz)
+         */
+        this.slippageBasis = constant_1.DEFAULT_SLIPPAGE_BASIS;
         const provider = {
             connection: connection,
             publicKey: user

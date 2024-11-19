@@ -3,16 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GlobalAccount = void 0;
 const borsh_1 = require("@coral-xyz/borsh");
 class GlobalAccount {
-    discriminator;
-    initialized = false;
-    authority;
-    feeRecipient;
-    initialVirtualTokenReserves;
-    initialVirtualSolReserves;
-    initialRealTokenReserves;
-    tokenTotalSupply;
-    feeBasisPoints;
     constructor(discriminator, initialized, authority, feeRecipient, initialVirtualTokenReserves, initialVirtualSolReserves, initialRealTokenReserves, tokenTotalSupply, feeBasisPoints) {
+        this.initialized = false;
         this.discriminator = discriminator;
         this.initialized = initialized;
         this.authority = authority;
